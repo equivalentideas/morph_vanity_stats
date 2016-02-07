@@ -1,6 +1,10 @@
 # This is a template for a Ruby scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 
+def extract_number(element)
+  element.text.delete(",").to_i
+end
+
 require 'scraperwiki'
 require 'mechanize'
 
@@ -10,9 +14,9 @@ page = agent.get("https://morph.io")
 metrics_set = page.at(".banner-metrics").search("strong")
 
 metrics = {
-  web_pages_scraped: metrics_set[0].text.delete(",").to_i,
-  rows_of_data_collected: metrics_set[1].text.delete(",").to_i,
-  downloads_and_API_queries: metrics_set[2].text.delete(",").to_i,
+  web_pages_scraped: extract_number(metrics_set[0]),
+  rows_of_data_collected: extract_number(metrics_set[1]),
+  downloads_and_API_queries: extract_number(metrics_set[2]),
   date_scraped: Date.today.to_s
 }
 
