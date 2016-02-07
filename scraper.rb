@@ -1,19 +1,23 @@
 # This is a template for a Ruby scraper on morph.io (https://morph.io)
 # including some code snippets below that you should find helpful
 
-# require 'scraperwiki'
-# require 'mechanize'
-#
-# agent = Mechanize.new
-#
-# # Read in a page
-# page = agent.get("http://foo.com")
-#
-# # Find somehing on the page using css selectors
-# p page.at('div.content')
-#
-# # Write out to the sqlite database using scraperwiki library
-# ScraperWiki.save_sqlite(["name"], {"name" => "susan", "occupation" => "software developer"})
+require 'scraperwiki'
+require 'mechanize'
+
+agent = Mechanize.new
+page = agent.get("https://morph.io")
+
+metrics = {
+  web_pages_scraped: page.at(".banner-metrics").search("strong")[0].text.delete(",").to_i,
+  rows_of_data_collected: page.at(".banner-metrics").search("strong")[1].text.delete(",").to_i,
+  downloads_and_API_queries: page.at(".banner-metrics").search("strong")[2].text.delete(",").to_i,
+  date_scraped: Date.today.to_s
+}
+
+p metrics
+
+# Write out to the sqlite database using scraperwiki library
+ScraperWiki.save_sqlite([:date_scraped], metrics)
 #
 # # An arbitrary query against the database
 # ScraperWiki.select("* from data where 'name'='peter'")
