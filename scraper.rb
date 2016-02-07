@@ -7,10 +7,12 @@ require 'mechanize'
 agent = Mechanize.new
 page = agent.get("https://morph.io")
 
+metrics_set = page.at(".banner-metrics").search("strong")
+
 metrics = {
-  web_pages_scraped: page.at(".banner-metrics").search("strong")[0].text.delete(",").to_i,
-  rows_of_data_collected: page.at(".banner-metrics").search("strong")[1].text.delete(",").to_i,
-  downloads_and_API_queries: page.at(".banner-metrics").search("strong")[2].text.delete(",").to_i,
+  web_pages_scraped: metrics_set[0].text.delete(",").to_i,
+  rows_of_data_collected: metrics_set[1].text.delete(",").to_i,
+  downloads_and_API_queries: metrics_set[2].text.delete(",").to_i,
   date_scraped: Date.today.to_s
 }
 
